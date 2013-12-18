@@ -53,6 +53,25 @@ class Malam_Model_File extends ORM
         'user'          => array('model' => 'user', 'foreign_key' => 'user_id'),
     );
 
+    /**
+     * @var bool
+     */
+    protected $_is_direct_call  = TRUE;
+
+    /**
+     * "Has many" relationships
+     *
+     * @var array
+     */
+    protected $_has_many        = array(
+        'contents'      => array(
+            'model'         => 'bigcontent',
+            'through'       => 'relationship_files',
+            'foreign_key'   => 'file_id',
+            'far_key'       => 'object_id',
+        ),
+    );
+
     public function __construct($id = NULL)
     {
         parent::__construct($id);
@@ -65,7 +84,7 @@ class Malam_Model_File extends ORM
             'file'  => array(
                 array('not_empty'),
             ),
-            'mime'  => array(
+            'type' => array(
                 array('not_empty'),
             ),
         );
@@ -108,6 +127,56 @@ class Malam_Model_File extends ORM
         }
 
         return $value;
+    }
+
+    /**
+     * Insert a new object to the database
+     *
+     * @param  Validation $validation Validation object
+     * @return ORM
+     */
+    public function create(Validation $validation = NULL)
+    {
+        $this->type = $this->object_name();
+        return parent::create($validation);
+    }
+
+    /**
+     * Initializes the Database Builder to given query type
+     *
+     * @param  integer $type Type of Database query
+     * @return ORM
+     */
+    protected function _build($type)
+    {
+        if (! $this->is_direct_call())
+        {
+            $this->where('type', '=', $this->object_name());
+        }
+
+        if ($this->is_hidden())
+        {
+            $this->where('is_hidden', '=', FALSE);
+        }
+
+        return parent::_build($type);
+    }
+
+    protected function is_direct_call()
+    {
+        return $this->_is_direct_call;
+    }
+
+    public function object_name()
+    {
+        if (! $this->is_direct_call())
+        {
+            return parent::object_name();
+        }
+        else
+        {
+            return $this->type;
+        }
     }
 
     public function file_accept()
@@ -168,6 +237,7 @@ class Malam_Model_File extends ORM
             'files'     => array(
                 'name'  => $this->name(),
                 'size'  => filesize($this->real_path()),
+                'type'  => File::mime($this->real_path()),
                 'url'   => $this->filelink,
                 'md5sum'=> $this->md5sum
             ),

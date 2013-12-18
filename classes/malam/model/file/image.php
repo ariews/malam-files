@@ -7,39 +7,10 @@ defined('SYSPATH') or die('No direct script access.');
  *
  * @author arie
  */
-class Malam_Model_Image extends Model_File
+
+class Malam_Model_File_Image extends Model_File
 {
     protected $_admin_route_name = 'admin-image';
-
-    /**
-     * Name Field
-     *
-     * @var string
-     */
-    protected $name_field       = 'file';
-
-    /**
-     * "Has many" relationships
-     *
-     * @var array
-     */
-    protected $_has_many        = array(
-        'contents'      => array(
-            'model'         => 'bigcontent',
-            'through'       => 'relationship_images',
-            'foreign_key'   => 'image_id',
-            'far_key'       => 'object_id',
-        ),
-    );
-
-    public function rules()
-    {
-        return array(
-            'file'  => array(
-                array('not_empty'),
-            ),
-        );
-    }
 
     public function file_accept()
     {
@@ -87,19 +58,8 @@ class Malam_Model_Image extends Model_File
 
     public function as_ajax_result()
     {
-        $img = Image::factory($this->real_path());
-        $res = array(
-            'filename'  => $this->file,
-            'filelink'  => $this->filelink,
-            'files'     => array(
-                'name'  => $this->name(),
-                'size'  => filesize($this->real_path()),
-                'type'  => $img->mime,
-                'url'   => $this->filelink,
-                'thumb' => $this->thumbnail('small'),
-                'md5sum'=> $this->md5sum
-            ),
-        );
+        $res = parent::as_ajax_result();
+        $res['files']['thumb'] = $this->thumbnail('small');
 
         return $res;
     }

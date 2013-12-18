@@ -20,18 +20,18 @@ return array(
     'thumbnails' => array(
         'name'      => 'th_:widthx:height_:name',
         'sizes'     => array(
-            'small'  => array(
-                'width'  => 260,
-                'height' => 180,
-            ),
-            'medium' => array(
-                'width'  => 300,
-                'height' => 200,
-            ),
-            'big'    => array(
-                'width'  => 600,
-                'height' => 400,
-            ),
+//            'small'  => array(
+//                'width'  => 260,
+//                'height' => 180,
+//            ),
+//            'medium' => array(
+//                'width'  => 300,
+//                'height' => 200,
+//            ),
+//            'big'    => array(
+//                'width'  => 600,
+//                'height' => 400,
+//            ),
         )
     ),
 );
