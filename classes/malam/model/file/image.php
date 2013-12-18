@@ -12,6 +12,8 @@ class Malam_Model_File_Image extends Model_File
 {
     protected $_admin_route_name = 'admin-image';
 
+    protected $_is_direct_call  = FALSE;
+
     public function file_accept()
     {
         $config = $this->_config['upload']['accept'];
