@@ -162,6 +162,19 @@ class Malam_Model_File extends ORM
         return parent::_build($type);
     }
 
+    public function __call($method, $args = array())
+    {
+        if ($this->is_direct_call() &&
+            preg_match('/^(?<admin_action>(admin[_-])?(?<action>[^_]+))_url(?<uri_only>_only)?$/i', $method)
+        )
+        {
+            $cnt = ORM::factory($this->type, $this->pk());
+            return call_user_func_array(array($cnt, $method), $args);
+        }
+
+        return parent::__call($method, $args);
+    }
+
     protected function is_direct_call()
     {
         return $this->_is_direct_call;
