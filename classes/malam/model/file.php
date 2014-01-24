@@ -6,7 +6,7 @@ defined('SYSPATH') or die('No direct script access.');
  * @author arie
  */
 
-class Malam_Model_File extends ORM
+class Malam_Model_File extends Model_Multidata
 {
     /**
      * Auto-update columns for creation
@@ -52,11 +52,6 @@ class Malam_Model_File extends ORM
     protected $_belongs_to      = array(
         'user'          => array('model' => 'user', 'foreign_key' => 'user_id'),
     );
-
-    /**
-     * @var bool
-     */
-    protected $_is_direct_call  = TRUE;
 
     /**
      * "Has many" relationships
@@ -129,39 +124,6 @@ class Malam_Model_File extends ORM
         return $value;
     }
 
-    /**
-     * Insert a new object to the database
-     *
-     * @param  Validation $validation Validation object
-     * @return ORM
-     */
-    public function create(Validation $validation = NULL)
-    {
-        $this->type = $this->object_name();
-        return parent::create($validation);
-    }
-
-    /**
-     * Initializes the Database Builder to given query type
-     *
-     * @param  integer $type Type of Database query
-     * @return ORM
-     */
-    protected function _build($type)
-    {
-        if (! $this->is_direct_call())
-        {
-            $this->where('type', '=', $this->object_name());
-        }
-
-        if ($this->is_hidden())
-        {
-            $this->where('is_hidden', '=', FALSE);
-        }
-
-        return parent::_build($type);
-    }
-
     public function __call($method, $args = array())
     {
         if ($this->is_direct_call() &&
@@ -173,23 +135,6 @@ class Malam_Model_File extends ORM
         }
 
         return parent::__call($method, $args);
-    }
-
-    protected function is_direct_call()
-    {
-        return $this->_is_direct_call;
-    }
-
-    public function object_name()
-    {
-        if (! $this->is_direct_call())
-        {
-            return parent::object_name();
-        }
-        else
-        {
-            return $this->type;
-        }
     }
 
     public function file_accept()
@@ -329,16 +274,13 @@ class Malam_Model_File extends ORM
             case 'uploader':
                 $user   = Auth::instance()->get_user();
                 return $this->user->name();
-                break;
 
             case 'created_at':
             case 'created at':
                 return parent::get_field('created_at');
-                break;
 
             default :
                 return parent::get_field($field);
-                break;
         endswitch;
     }
 }
