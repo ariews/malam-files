@@ -22,7 +22,7 @@ class Malam_Model_File extends Model_Multidata
      *
      * @var string
      */
-    protected $name_field       = 'file';
+    protected $_name_field      = 'file';
 
     /**
      * Config

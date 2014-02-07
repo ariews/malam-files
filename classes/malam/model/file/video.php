@@ -10,8 +10,6 @@ defined('SYSPATH') or die('No direct script access.');
 
 class Malam_Model_File_Video extends Model_File
 {
-    protected $_admin_route_name = 'admin-video';
-
     protected $_is_direct_call  = FALSE;
 
     public function file_accept()
