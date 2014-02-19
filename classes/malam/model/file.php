@@ -67,6 +67,8 @@ class Malam_Model_File extends Model_Multidata
         ),
     );
 
+    protected $_ptable_columns  = array('id', 'uploader', 'created at');
+
     public function __construct($id = NULL)
     {
         parent::__construct($id);
@@ -263,9 +265,7 @@ class Malam_Model_File extends Model_Multidata
 
     public function to_paginate()
     {
-        return Paginate::factory($this)
-            ->sort('created_at', Paginate::SORT_DESC)
-            ->columns(array($this->primary_key(), 'uploader', 'created at'));
+        return parent::to_paginate()->sort('created_at', Paginate::SORT_DESC);
     }
 
     public function get_field($field)
